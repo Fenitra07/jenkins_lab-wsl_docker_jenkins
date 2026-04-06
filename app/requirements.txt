@@ -1,4 +1,2 @@
-cat > requirements.txt << 'EOF'
 flask==3.0.0
 pytest==7.4.0
-EOF
