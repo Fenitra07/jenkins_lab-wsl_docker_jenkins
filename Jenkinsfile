@@ -2,7 +2,7 @@ pipeline {
     agent none
 
     environment {
-        DOCKER_HUB_USER = 'fenitrar07'
+        DOCKER_HUB_USER = 'fenitra0011'
         IMAGE_NAME      = 'jenkins-python-app'
         IMAGE_TAG       = "${BUILD_NUMBER}"
     }
