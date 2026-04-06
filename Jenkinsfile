@@ -1,4 +1,3 @@
-cat > Jenkinsfile << 'EOF'
 pipeline {
     agent none
 
@@ -6,45 +5,23 @@ pipeline {
         stage('Checkout') {
             agent { label 'review' }
             steps {
-                echo "✅ Code récupéré sur branche ${env.BRANCH_NAME}"
+                echo "Code recupere"
             }
         }
 
-        stage('Install') {
+        stage('Build') {
             agent { label 'review' }
             steps {
-                echo "📦 Installation des dépendances..."
-                sh '''
-                    apt-get update -q
-                    apt-get install -y python3 python3-pip -q
-                    pip3 install -r app/requirements.txt
-                '''
+                echo "Build en cours..."
+                sh 'echo "Build OK" > build.txt'
             }
         }
 
         stage('Test') {
             agent { label 'stage' }
             steps {
-                echo "🧪 Lancement des tests..."
-                sh '''
-                    apt-get update -q
-                    apt-get install -y python3 python3-pip -q
-                    pip3 install -r app/requirements.txt
-                    cd app && python3 -m pytest tests/ -v
-                '''
-            }
-        }
-
-        stage('Deploy Staging') {
-            agent { label 'stage' }
-            when { branch 'develop' }
-            steps {
-                echo "📦 Deploy sur Staging..."
-                sh '''
-                    pkill -f "python3 app.py" || true
-                    cd app && nohup python3 app.py &
-                    echo "✅ App lancée sur staging"
-                '''
+                echo "Tests en cours..."
+                sh 'apt-get install -y python3 python3-pip -q && cd app && python3 -m pytest tests/ -v'
             }
         }
 
@@ -52,19 +29,13 @@ pipeline {
             agent { label 'prod' }
             when { branch 'main' }
             steps {
-                echo "🚀 Deploy en Production !"
-                sh '''
-                    pkill -f "python3 app.py" || true
-                    cd app && nohup python3 app.py &
-                    echo "✅ App lancée en prod"
-                '''
+                echo "Deploy en Production !"
             }
         }
     }
 
     post {
-        success { echo "✅ Pipeline réussi !" }
-        failure { echo "❌ Pipeline échoué !" }
+        success { echo "Pipeline reussi !" }
+        failure { echo "Pipeline echoue !" }
     }
 }
-EOF
